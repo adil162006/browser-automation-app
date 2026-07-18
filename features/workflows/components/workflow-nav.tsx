@@ -1,6 +1,8 @@
 "use client"
 
-import { useTransition } from "react"
+import { useState, useTransition } from "react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { PlusIcon, WorkflowIcon } from "lucide-react"
 
 import { generateSlug } from "@/features/workflows/lib/generate-slug"
@@ -28,7 +30,9 @@ interface WorkflowNavProps {
 }
 
 export function WorkflowNav({ workflows, onCreateWorkflow }: WorkflowNavProps) {
-  const { state } = useSidebar()
+  const pathname = usePathname()
+  const { state, isMobile, setOpenMobile } = useSidebar()
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
 
   const handleCreateWorkflow = () => {
@@ -37,13 +41,27 @@ export function WorkflowNav({ workflows, onCreateWorkflow }: WorkflowNavProps) {
     })
   }
 
-  const workflowItems = workflows.map((workflow) => (
-    <SidebarMenuItem key={workflow.id}>
-      <SidebarMenuButton>
-        <span>{workflow.name}</span>
-      </SidebarMenuButton>
-    </SidebarMenuItem>
-  ))
+  const handleWorkflowSelect = () => {
+    setIsPopoverOpen(false)
+
+    if (isMobile) {
+      setOpenMobile(false)
+    }
+  }
+
+  const workflowItems = workflows.map((workflow) => {
+    const href = `/workflows/${workflow.id}`
+
+    return (
+      <SidebarMenuItem key={workflow.id}>
+        <SidebarMenuButton asChild isActive={pathname === href}>
+          <Link href={href} onClick={handleWorkflowSelect}>
+            <span>{workflow.name}</span>
+          </Link>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    )
+  })
 
   if (state === "collapsed") {
     return (
@@ -51,7 +69,10 @@ export function WorkflowNav({ workflows, onCreateWorkflow }: WorkflowNavProps) {
         <SidebarGroupContent>
           <SidebarMenu>
             <SidebarMenuItem>
-              <Popover>
+              <Popover
+                open={isPopoverOpen}
+                onOpenChange={setIsPopoverOpen}
+              >
                 <PopoverTrigger asChild>
                   <SidebarMenuButton tooltip="Workflows">
                     <WorkflowIcon />
