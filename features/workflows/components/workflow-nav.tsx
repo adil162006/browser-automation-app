@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useTransition } from "react"
+import { useTransition } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { PlusIcon, WorkflowIcon } from "lucide-react"
@@ -30,9 +30,8 @@ interface WorkflowNavProps {
 }
 
 export function WorkflowNav({ workflows, onCreateWorkflow }: WorkflowNavProps) {
+  const { state } = useSidebar()
   const pathname = usePathname()
-  const { state, isMobile, setOpenMobile } = useSidebar()
-  const [isPopoverOpen, setIsPopoverOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
 
   const handleCreateWorkflow = () => {
@@ -41,27 +40,18 @@ export function WorkflowNav({ workflows, onCreateWorkflow }: WorkflowNavProps) {
     })
   }
 
-  const handleWorkflowSelect = () => {
-    setIsPopoverOpen(false)
-
-    if (isMobile) {
-      setOpenMobile(false)
-    }
-  }
-
-  const workflowItems = workflows.map((workflow) => {
-    const href = `/workflows/${workflow.id}`
-
-    return (
-      <SidebarMenuItem key={workflow.id}>
-        <SidebarMenuButton asChild isActive={pathname === href}>
-          <Link href={href} onClick={handleWorkflowSelect}>
-            <span>{workflow.name}</span>
-          </Link>
-        </SidebarMenuButton>
-      </SidebarMenuItem>
-    )
-  })
+  const workflowItems = workflows.map((workflow) => (
+    <SidebarMenuItem key={workflow.id}>
+      <SidebarMenuButton
+        asChild
+        isActive={pathname === `/workflows/${workflow.id}`}
+      >
+        <Link href={`/workflows/${workflow.id}`}>
+          <span>{workflow.name}</span>
+        </Link>
+      </SidebarMenuButton>
+    </SidebarMenuItem>
+  ))
 
   if (state === "collapsed") {
     return (
@@ -69,10 +59,7 @@ export function WorkflowNav({ workflows, onCreateWorkflow }: WorkflowNavProps) {
         <SidebarGroupContent>
           <SidebarMenu>
             <SidebarMenuItem>
-              <Popover
-                open={isPopoverOpen}
-                onOpenChange={setIsPopoverOpen}
-              >
+              <Popover>
                 <PopoverTrigger asChild>
                   <SidebarMenuButton tooltip="Workflows">
                     <WorkflowIcon />
