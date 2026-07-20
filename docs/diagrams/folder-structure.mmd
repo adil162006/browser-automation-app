@@ -1,0 +1,15 @@
+flowchart TD
+  Root["repository root"] --> App["app/ routes and layouts"]
+  Root --> Components["components/ UI and shell"]
+  Root --> Features["features/workflows/"]
+  Root --> Lib["lib/ services, db, helpers"]
+  Root --> Hooks["hooks/"]
+  Root --> Design["Design/ references"]
+  Root --> Docs["docs/"]
+  Features --> FComponents["components/"]
+  Features --> FNodes["nodes/"]
+  Features --> FTasks["tasks/"]
+  Features --> FLib["lib/"]
+  Lib --> DB["db/ schema and migrations"]
+  Docs --> Diagrams["diagrams/ Mermaid sources"]
+

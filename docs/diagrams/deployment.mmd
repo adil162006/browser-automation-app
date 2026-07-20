@@ -1,0 +1,13 @@
+flowchart TB
+  Dev[Developer or CI] --> Image[Docker multi-stage build]
+  Image --> Web[Node 22 standalone web container]
+  Web --> Clerk[Clerk]
+  Web --> Neon[(Neon)]
+  Web --> Liveblocks[Liveblocks]
+  Web --> Trigger[Trigger.dev API]
+  Trigger --> Task[Deployed run-workflow task]
+  Task --> Browserbase[Browserbase]
+  Task --> Resend[Resend]
+  Secrets[Runtime secret manager] --> Web
+  Secrets --> Task
+

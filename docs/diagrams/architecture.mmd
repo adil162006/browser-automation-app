@@ -1,0 +1,13 @@
+flowchart LR
+  Browser[Authenticated browser] --> Next[Next.js 16 app]
+  Next --> Clerk[Clerk]
+  Next --> DB[(Neon Postgres)]
+  Next --> LB[Liveblocks]
+  Next --> TD[Trigger.dev]
+  TD --> DB
+  TD --> SH[Stagehand]
+  SH --> BB[Browserbase]
+  TD --> Resend[Resend]
+  LB -. collaborative graph and presence .-> Browser
+  TD -. realtime runs and metadata .-> Browser
+

@@ -1,0 +1,25 @@
+sequenceDiagram
+  participant UI as Workflow editor
+  participant SA as Server Action
+  participant DB as Neon
+  participant T as Trigger.dev
+  participant S as Stagehand
+  participant B as Browserbase
+  participant E as Resend
+  UI->>SA: id and current graph
+  SA->>SA: Clerk auth and graph/plan validation
+  SA->>DB: save graph snapshot
+  SA->>T: trigger run-workflow with workflow tag
+  T->>DB: load organization-scoped graph
+  T->>T: topological sort connected nodes
+  loop Each node
+    T-->>UI: metadata status update
+    alt Browser node
+      T->>S: execute node
+      S->>B: browser/model operation
+    else Email node
+      T->>E: send email
+    end
+  end
+  T-->>UI: final output and session ID
+
