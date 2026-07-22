@@ -129,11 +129,11 @@ export function useConsoleRuns(): ConsoleRun[] {
 
   return useMemo<ConsoleRun[]>(
     () =>
-      [...runs]
+      [...runs] 
         .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
         .map((run) => ({
           id: run.id,
-          status: run.status,
+          status: run.status,   
           createdAt: run.createdAt,
           isLive: isRunLive(run),
           steps: stepsForRun(run),

@@ -13,7 +13,7 @@ import {
 export type StepNodeKind = "trigger" | "action"
 
 // One editable field on a node, rendered as an input in the inspector later.
-export type NodeField = {
+export type NodeField = { 
   key: string
   label: string
   placeholder?: string
